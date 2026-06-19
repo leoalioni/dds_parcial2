@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDS · Parcial 2 — Guía de estudio interactiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5efe3;
+  --paper2:#efe7d6;
+  --card:#fffdf8;
+  --ink:#221d16;
+  --ink-soft:#4f463a;
+  --muted:#8a7e6b;
+  --line:#e3d9c6;
+  --line-strong:#d3c6ad;
+  --brand:#bf4a2e;
+  --brand-deep:#9a3620;
+  --ok:#2f7152;
+  --ok-soft:#e4f0e7;
+  --bad:#c23b34;
+  --bad-soft:#f7e3e1;
+  --code-bg:#211c17;
+  --code-ink:#f1e8d8;
+  --shadow:0 1px 2px rgba(60,45,25,.06), 0 10px 30px -12px rgba(80,55,25,.18);
+  --shadow-lg:0 30px 60px -20px rgba(70,45,20,.35);
+  /* category colors */
+  --c-express:#3a7d44; --c-testing:#7c4d8b; --c-auth:#bf4a2e;
+  --c-comp:#2c6ab0; --c-hooks:#1f8a8a; --c-forms:#c0852a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color:var(--ink);
+  background:var(--paper);
+  background-image:
+    radial-gradient(120% 90% at 100% 0%, rgba(191,74,46,.07), transparent 60%),
+    radial-gradient(90% 70% at 0% 100%, rgba(31,138,138,.06), transparent 55%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+::selection{background:var(--brand);color:#fff}
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:20px;border:3px solid var(--paper)}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* ---------- HEADER ---------- */
+header.top{
+  position:sticky;top:0;z-index:50;
+  background:rgba(245,239,227,.82);
+  backdrop-filter:blur(14px) saturate(1.2);
+  border-bottom:1px solid var(--line);
+}
+.bar{
+  max-width:980px;margin:0 auto;padding:14px 22px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:baseline;gap:11px;margin-right:auto;min-width:0}
+.brand .tag{
+  font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--brand);
+  padding:4px 9px;border-radius:6px;box-shadow:0 4px 10px -3px rgba(191,74,46,.6);
+  white-space:nowrap;
+}
+.brand h1{
+  font-family:'Fraunces','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;font-weight:900;font-size:21px;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.brand h1 em{font-style:italic;font-weight:500;color:var(--brand-deep)}
+
+.seg{display:inline-flex;background:var(--paper2);border:1px solid var(--line-strong);border-radius:11px;padding:3px}
+.seg button{
+  font:inherit;font-weight:600;font-size:13.5px;border:0;background:transparent;color:var(--ink-soft);
+  padding:7px 15px;border-radius:8px;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:7px;
+}
+.seg button .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.5}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--brand-deep);box-shadow:var(--shadow)}
+.seg button[aria-pressed="true"] .dot{opacity:1;background:var(--brand)}
+
+.search{position:relative;display:flex;align-items:center}
+.search svg{position:absolute;left:12px;width:16px;height:16px;color:var(--muted);pointer-events:none}
+.search input{
+  font:inherit;font-size:14px;color:var(--ink);
+  background:var(--card);border:1px solid var(--line-strong);border-radius:10px;
+  padding:9px 12px 9px 35px;width:210px;transition:.2s;box-shadow:var(--shadow);
+}
+.search input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(191,74,46,.15)}
+.search kbd{
+  position:absolute;right:9px;font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-size:11px;color:var(--muted);
+  border:1px solid var(--line-strong);border-bottom-width:2px;border-radius:5px;padding:1px 5px;background:var(--paper)
+}
+.search input:focus + kbd{display:none}
+
+/* ---------- CHIPS ---------- */
+.chips-wrap{border-bottom:1px solid var(--line);background:rgba(245,239,227,.6)}
+.chips{max-width:980px;margin:0 auto;padding:11px 22px;display:flex;gap:9px;overflow-x:auto;align-items:center}
+.chips::-webkit-scrollbar{height:0}
+.chip{
+  font:inherit;font-weight:600;font-size:13px;white-space:nowrap;cursor:pointer;
+  border:1px solid var(--line-strong);background:var(--card);color:var(--ink-soft);
+  padding:7px 13px;border-radius:30px;transition:.16s;display:flex;align-items:center;gap:7px;
+}
+.chip:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.chip .cdot{width:9px;height:9px;border-radius:50%;background:var(--cc,var(--muted))}
+.chip .cnt{font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-size:11px;color:var(--muted);font-weight:700}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fbf5ea;border-color:var(--ink)}
+.chip[aria-pressed="true"] .cnt{color:#d8c8ad}
+
+/* ---------- LAYOUT ---------- */
+main{max-width:820px;margin:0 auto;padding:34px 22px 90px}
+.intro{margin-bottom:30px}
+.intro .kicker{font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);font-weight:700;margin-bottom:10px}
+.intro h2{font-family:'Fraunces','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;font-weight:900;font-size:clamp(28px,5vw,40px);line-height:1.05;letter-spacing:-.02em;margin-bottom:14px}
+.intro p{color:var(--ink-soft);font-size:16px;max-width:60ch}
+.intro .meta{display:flex;gap:22px;margin-top:20px;flex-wrap:wrap}
+.intro .meta div{display:flex;flex-direction:column}
+.intro .meta b{font-family:'Fraunces','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;font-size:26px;font-weight:900;line-height:1}
+.intro .meta span{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+
+/* ---------- SCORE (quiz) ---------- */
+.scorebar{display:none;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line-strong);border-radius:14px;padding:14px 18px;margin-bottom:26px;box-shadow:var(--shadow)}
+body[data-mode="quiz"] .scorebar{display:flex}
+.scorebar .track{flex:1;height:9px;background:var(--paper2);border-radius:10px;overflow:hidden}
+.scorebar .fill{height:100%;width:0;background:linear-gradient(90deg,var(--ok),#3d9069);border-radius:10px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.scorebar .nums{font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-weight:700;font-size:14px;white-space:nowrap}
+.scorebar .nums b{color:var(--ok);font-size:18px}
+.scorebar .reset{font:inherit;font-weight:600;font-size:13px;cursor:pointer;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink-soft);padding:7px 13px;border-radius:9px;transition:.16s}
+.scorebar .reset:hover{background:var(--bad-soft);color:var(--bad);border-color:var(--bad)}
+
+.tools{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px}
+.tools .count{font-size:13.5px;color:var(--muted);font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace}
+.tools .count b{color:var(--ink)}
+.linkbtn{font:inherit;font-weight:600;font-size:13px;cursor:pointer;background:none;border:0;color:var(--brand-deep);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px;padding:4px}
+.linkbtn:hover{color:var(--brand)}
+
+/* ---------- CARD ---------- */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:22px 24px;margin-bottom:18px;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+  animation:rise .5s both;
+}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cc,var(--brand))}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.q-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px}
+.q-num{
+  flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  font-family:'Fraunces','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;font-weight:900;font-size:17px;
+  background:color-mix(in srgb, var(--cc) 13%, #fff);color:var(--cc);border:1px solid color-mix(in srgb,var(--cc) 25%,transparent);
+}
+.q-head .qt{flex:1;min-width:0}
+.q-cat{font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cc);margin-bottom:5px;display:flex;align-items:center;gap:7px}
+.q-cat .warn{color:#b07d12;background:#f8eccb;border:1px solid #e8cf8e;border-radius:5px;padding:1px 6px;font-size:9.5px;letter-spacing:.06em}
+.q-text{font-family:'Fraunces','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;font-weight:600;font-size:19px;line-height:1.3;letter-spacing:-.01em}
+
+/* options */
+.opts{display:flex;flex-direction:column;gap:8px;list-style:none}
+.opt{
+  display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;
+  font:inherit;font-size:15px;color:var(--ink-soft);line-height:1.4;
+  background:var(--paper);border:1px solid var(--line);border-radius:11px;
+  padding:12px 14px;transition:.15s;
+}
+.opt .mark{flex:none;width:21px;height:21px;border-radius:50%;border:1.5px solid var(--line-strong);display:grid;place-items:center;margin-top:1px;font-size:12px;color:transparent;transition:.15s;background:#fff}
+button.opt{cursor:pointer}
+button.opt:hover{border-color:var(--line-strong);background:#fff;transform:translateX(2px)}
+
+/* study mode: correct shown */
+.opt.correct{background:var(--ok-soft);border-color:#bcd9c6;color:#1d4734;font-weight:600}
+.opt.correct .mark{background:var(--ok);border-color:var(--ok);color:#fff}
+/* quiz mode states */
+.opt.picked-wrong{background:var(--bad-soft);border-color:#e9b6b2;color:#8f2a25}
+.opt.picked-wrong .mark{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.reveal-ok{background:var(--ok-soft);border-color:#bcd9c6;color:#1d4734;font-weight:600}
+.opt.reveal-ok .mark{background:var(--ok);border-color:var(--ok);color:#fff}
+.opts.locked button.opt{cursor:default;transform:none}
+.opts.locked button.opt:not(.picked-wrong):not(.reveal-ok){opacity:.62}
+
+/* explanation */
+.why{margin-top:16px;border-top:1px dashed var(--line-strong);padding-top:0;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;opacity:0}
+.why.open{max-height:1600px;padding-top:16px;opacity:1}
+.why .lead{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ok);margin-bottom:9px}
+.why p{font-size:15px;color:var(--ink-soft);margin-bottom:14px}
+.why p code,.q-text code{font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-size:.86em;background:var(--paper2);padding:1px 6px;border-radius:5px;color:var(--brand-deep);font-weight:500}
+.why .extra{font-size:13.5px;color:var(--muted);font-style:italic;border-left:3px solid var(--line-strong);padding-left:12px;margin-top:-4px;margin-bottom:14px}
+
+.toggle-why{
+  margin-top:14px;font:inherit;font-weight:600;font-size:13.5px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;color:var(--cc,var(--brand-deep));
+  background:color-mix(in srgb,var(--cc) 9%,#fff);border:1px solid color-mix(in srgb,var(--cc) 22%,transparent);
+  padding:8px 14px;border-radius:9px;transition:.16s;
+}
+.toggle-why:hover{background:color-mix(in srgb,var(--cc) 16%,#fff)}
+.toggle-why svg{width:14px;height:14px;transition:transform .3s}
+.toggle-why.open svg{transform:rotate(180deg)}
+
+/* code block */
+.code{background:var(--code-bg);border-radius:12px;overflow:hidden;box-shadow:0 14px 30px -16px rgba(33,28,23,.7);margin-top:4px}
+.code .chrome{display:flex;align-items:center;gap:7px;padding:9px 14px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07)}
+.code .chrome .d{width:10px;height:10px;border-radius:50%}
+.code .chrome .d:nth-child(1){background:#e0604f}.code .chrome .d:nth-child(2){background:#e7b14e}.code .chrome .d:nth-child(3){background:#5fb37a}
+.code .chrome .fn{margin-left:8px;font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-size:11.5px;color:#a99e8b;letter-spacing:.02em}
+.code pre{margin:0;padding:16px 18px;overflow-x:auto}
+.code code{font-family:'JetBrains Mono','Cascadia Code',Consolas,'SFMono-Regular',Menlo,monospace;font-size:13px;line-height:1.7;color:var(--code-ink);white-space:pre;display:block}
+.code .cm{color:#7f8f76;font-style:italic}/* comment */
+.code .kw{color:#e6915c}/* keyword */
+.code .st{color:#9fcf8e}/* string */
+.code .fn2{color:#e3c879}/* function */
+.code .tg{color:#6fb6d6}/* tag/jsx */
+.code .nu{color:#d98ab0}
+
+.empty{text-align:center;padding:70px 20px;color:var(--muted)}
+.empty h3{font-family:'Fraunces','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;font-size:24px;color:var(--ink-soft);margin-bottom:8px}
+
+footer{max-width:820px;margin:0 auto;padding:30px 22px 60px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center;line-height:1.7}
+footer b{color:var(--ink-soft)}
+
+@media (max-width:640px){
+  .bar{padding:12px 16px;gap:10px}
+  .brand h1{font-size:17px}
+  .search input{width:140px}
+  main{padding:26px 16px 70px}
+  .card{padding:18px 16px}
+  .q-text{font-size:17px}
+}
+@media print{
+  header.top,.chips-wrap,.tools,.toggle-why,.search,.seg{display:none!important}
+  .why{max-height:none!important;opacity:1!important;padding-top:16px!important}
+  .card{break-inside:avoid;box-shadow:none;border-color:#ccc}
+  body{background:#fff}
+}
+</style>
+</head>
+<body data-mode="study">
+<header class="top">
+  <div class="bar">
+    <div class="brand">
+      <span class="tag">DDS · P2</span>
+      <h1>Parcial&nbsp;2 — <em>guía interactiva</em></h1>
+    </div>
+    <div class="seg" role="group" aria-label="Modo">
+      <button id="m-study" aria-pressed="true"><span class="dot"></span>Estudiar</button>
+      <button id="m-quiz" aria-pressed="false"><span class="dot"></span>Examen</button>
+    </div>
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Buscar tema, palabra…" autocomplete="off">
+      <kbd>/</kbd>
+    </label>
+  </div>
+  <div class="chips-wrap"><div class="chips" id="chips"></div></div>
+</header>
+
+<main>
+  <section class="intro">
+    <div class="kicker">Desarrollo de Software · 60 preguntas resueltas</div>
+    <h2>Entendé el <em style="font-style:italic;color:var(--brand-deep)">porqué</em>.</h2>
+    <p>Cada pregunta del test muestra la opción correcta, una explicación breve en lenguaje simple y un ejemplo de código de cómo se implementa en la práctica. Cambiá a <b>modo Examen</b> para autoevaluarte.</p>
+    <div class="meta">
+      <div><b id="stat-total">60</b><span>Preguntas</span></div>
+      <div><b>6</b><span>Temas</span></div>
+      <div><b id="stat-shown">60</b><span>Mostrando</span></div>
+    </div>
+  </section>
+
+  <div class="scorebar">
+    <div class="nums"><b id="sc-ok">0</b> / <span id="sc-ans">0</span> correctas</div>
+    <div class="track"><div class="fill" id="sc-fill"></div></div>
+    <button class="reset" id="sc-reset">Reiniciar</button>
+  </div>
+
+  <div class="tools">
+    <div class="count"><b id="count-n">60</b> preguntas</div>
+    <button class="linkbtn" id="expand-all">Expandir todo</button>
+  </div>
+
+  <div id="list"></div>
+</main>
+
+<footer>
+  <b>DDS — Práctica Parcial 2.</b> Material de estudio generado a partir del test original (60 preguntas).<br>
+  Las preguntas marcadas <span style="color:#b07d12;font-weight:700">⚠ ambigua</span> conviene contrastarlas con el corrector oficial. Tip: <b>/</b> para buscar · <b>Examen</b> para autoevaluarte · imprimí con Ctrl+P.
+</footer>
+
+<script>
+const CATS = {
+  express:{name:"Express & Node",  color:"var(--c-express)"},
+  testing:{name:"Testing & Calidad",color:"var(--c-testing)"},
+  auth:   {name:"Autenticación & JWT",color:"var(--c-auth)"},
+  comp:   {name:"React · Componentes",color:"var(--c-comp)"},
+  hooks:  {name:"React · Hooks & Router",color:"var(--c-hooks)"},
+  forms:  {name:"Formularios & Axios",color:"var(--c-forms)"},
+};
+
+const QUESTIONS = [
+{id:1,cat:"express",file:"usuarios.js",q:"¿Qué es un enrutador montable en Express.js?",options:["Un enrutador que se puede ejecutar en una aplicación Express.","Un enrutador que se puede eliminar de una aplicación Express.","Un enrutador que se puede añadir a una aplicación Express.","Un enrutador que se puede detener en una aplicación Express."],correct:2,why:"Un enrutador montable es un objeto Router independiente que agrupa varias rutas y luego se 'monta' (se añade) a la app principal con `app.use()`. Sirve para dividir la aplicación en módulos en vez de tener todo en un único archivo.",code:`// usuarios.js — un router "montable", definido aparte
+const router = require('express').Router();
+router.get('/', (req, res) => res.send('Lista de usuarios'));
+module.exports = router;
+
+// app.js — se "monta" (se añade) en la app principal
+app.use('/usuarios', router); // ahora GET /usuarios responde`},
+
+{id:2,cat:"express",file:"app.js",q:"¿Qué middleware proporciona Express para servir archivos estáticos?",options:["express.statics","express.static","express.assets","express.file"],correct:1,why:"`express.static` (en singular) es el único middleware que Express trae incorporado. Sirve archivos tal cual están en el disco —HTML, CSS, imágenes, JS— desde la carpeta que le indiques.",code:`const express = require('express');
+const app = express();
+
+// sirve los archivos de la carpeta "public" directamente
+app.use(express.static('public'));
+// public/logo.png  ->  http://localhost:3000/logo.png`},
+
+{id:3,cat:"express",file:"cors-whitelist.js",warn:"El enunciado mezcla ideas: la librería cors no tiene métodos allow() ni restrict(). La forma real es un middleware (propio o la opción origin de cors) que valida el dominio de cada petición.",q:"¿Cómo se restringe el acceso a una lista blanca de dominios en Express?",options:["Usando la función allow() de la librería CORS.","Usando la función restrict() de la librería CORS.","Definiendo una función middleware que valida el dominio en cada solicitud a una ruta específica.","Definiendo una función middleware que se ejecuta antes de la función de respuesta."],correct:2,why:"No hay una función mágica: se usa un middleware que mira el origen de cada petición y solo deja pasar los dominios autorizados. La librería cors hace exactamente eso a través de su opción `origin`.",code:`const cors = require('cors');
+const permitidos = ['https://misitio.com', 'https://app.misitio.com'];
+
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || permitidos.includes(origin)) cb(null, true);
+    else cb(new Error('Dominio no permitido'));
+  }
+}));`},
+
+{id:4,cat:"express",file:"logger.js",q:"¿Qué es un middleware en Express?",options:["Un objeto que contiene información sobre la aplicación.","Una función que maneja errores en la aplicación.","Una función que recibe una petición y retorna una respuesta.","Una función que conecta dos piezas de la aplicación, como un puente en el que fluye la información."],correct:3,why:"Un middleware es una función que se ejecuta 'en el medio' del recorrido entre la petición y la respuesta. Recibe `req`, `res` y `next`; puede leer o modificar la petición y, si todo está bien, llama a `next()` para ceder el paso al siguiente eslabón.",code:`// un middleware: corre entre la petición y la respuesta
+function logger(req, res, next) {
+  console.log(req.method, req.url); // p.ej. GET /usuarios
+  next(); // cede el paso al siguiente eslabón
+}
+app.use(logger);`},
+
+{id:5,cat:"express",file:"ruta.js",q:"¿Qué es una función de callback en una ruta de Express.js?",options:["Una función que se ejecuta cuando se elimina la URL de la ruta.","Una función que se ejecuta cuando se define la URL de la ruta.","Una función que se ejecuta cuando se envía una respuesta a la URL de la ruta.","Una función que se ejecuta cuando se recibe una solicitud a la URL de la ruta."],correct:3,why:"En una ruta como `app.get('/ruta', callback)`, el callback es la función que Express ejecuta automáticamente cuando llega una petición a esa URL. Ahí recibís la petición (`req`) y armás la respuesta (`res`).",code:`// el 2º argumento es el callback que corre al RECIBIR la petición
+app.get('/saludo', (req, res) => {
+  res.send('¡Hola!');
+});`},
+
+{id:6,cat:"express",file:"cors-open.js",q:"¿Qué hace app.use(cors()) en Express.js?",options:["Permite a todos los dominios enviar solicitudes al servidor.","Permite a todos los dominios acceder a los recursos del servidor.","Previene que todos los dominios accedan a los recursos del servidor.","Previene que todos los dominios envíen solicitudes al servidor."],correct:1,why:"`cors()` sin opciones agrega la cabecera Access-Control-Allow-Origin: *, que le dice al navegador que cualquier dominio puede leer las respuestas de tu API. Es la apertura total: cómoda en desarrollo, poco segura en producción.",code:`const cors = require('cors');
+
+app.use(cors()); // Access-Control-Allow-Origin: *  (cualquier dominio)`},
+
+{id:7,cat:"express",file:"ajax.js",q:"¿Qué es una solicitud AJAX?",options:["Una solicitud que se envía desde el servidor al cliente sin necesidad de recargar la página.","Una solicitud que se envía desde el cliente al servidor sin necesidad de recargar la página.","Una solicitud que se envía desde el cliente al servidor y que requiere que la página se recargue.","Una solicitud que se envía desde el servidor al cliente y que requiere que la página se recargue."],correct:1,why:"AJAX permite que el navegador (cliente) le pida datos al servidor por detrás y actualice solo una parte de la página, sin recargarla entera. Hoy se hace con fetch o Axios.",code:`// AJAX moderno: pide datos sin recargar la página
+const res = await fetch('/api/productos');
+const productos = await res.json();
+document.querySelector('#total').textContent = productos.length;`},
+
+{id:8,cat:"express",file:"whitelist.js",q:"¿Qué es una lista blanca en el contexto de CORS?",options:["Una lista de dominios que pueden acceder a los recursos del servidor.","Una lista de dominios que no pueden acceder a los recursos del servidor.","Una lista de dominios que pueden enviar solicitudes al servidor.","Una lista de dominios que no pueden enviar solicitudes al servidor."],correct:0,why:"Una lista blanca (whitelist) enumera los orígenes autorizados: solo esos pueden consumir la API. Lo opuesto es una lista negra, que enumera los que se bloquean.",code:`// lista blanca: SOLO estos orígenes pueden acceder
+const listaBlanca = ['https://misitio.com', 'https://admin.misitio.com'];
+
+app.use(cors({ origin: listaBlanca }));`},
+
+{id:9,cat:"express",file:"rutas-archivos.js",q:"¿Qué es __dirname en Node.js?",options:["Una variable global que contiene la ruta del directorio del archivo de script que se está ejecutando actualmente.","Una variable global que contiene la ruta del directorio de la base de datos.","Una variable global que contiene la ruta del directorio de trabajo actual.","Una variable global que contiene la ruta del directorio de la aplicación Node.js."],correct:0,why:"__dirname es una variable que Node te da gratis: contiene la ruta absoluta de la carpeta donde vive el archivo .js actual. Sirve para armar rutas a otros archivos sin depender de desde dónde ejecutaste node (eso último es process.cwd()).",code:`const path = require('path');
+
+console.log(__dirname); // p.ej. /proyecto/src  (carpeta de ESTE archivo)
+
+// arma una ruta segura a /public sin importar desde dónde ejecutes node
+app.use(express.static(path.join(__dirname, 'public')));`},
+
+{id:10,cat:"express",file:"productos.routes.js",q:"¿Qué es express.Router en Express.js?",options:["Un módulo para manejar parámetros de URL.","Un módulo para manejar rutas.","Un módulo para manejar respuestas HTTP.","Un módulo para manejar solicitudes HTTP."],correct:1,why:"`express.Router()` crea un 'mini servidor' de rutas que definís aparte y luego enchufás a la app con `app.use()`. Es la herramienta para organizar las rutas por recurso (usuarios, productos, etc.).",code:`const router = require('express').Router();
+
+router.get('/', listar);
+router.post('/', crear);
+router.delete('/:id', borrar);
+
+module.exports = router; // luego: app.use('/productos', router)`},
+
+{id:11,cat:"testing",file:"usuarios.test.js",warn:"También suena válido 'detectar errores en la implementación'. Es una pregunta discutible: si el corrector marca otra, esa es la candidata. La idea central es el 'contrato' de la API.",q:"¿Por qué es importante probar endpoints que no existen o enviar datos no válidos?",options:["Para verificar que la API cumpla con su contrato.","Para detectar errores en la implementación de la API.","Para mejorar el rendimiento de la API.","Para establecer las expectativas mínimas de que la API esté activa y responda."],correct:0,why:"Una API tiene un 'contrato': promete responder de cierta forma en cada situación, incluidos los errores (404 si no existe, 400 si los datos son inválidos). Probar esos casos confirma que la API respeta ese contrato y no responde cualquier cosa.",code:`// Supertest: probar el "camino infeliz"
+test('devuelve 404 si el recurso no existe', async () => {
+  const res = await request(app).get('/api/usuarios/99999');
+  expect(res.status).toBe(404);
+});
+
+test('devuelve 400 si el body es inválido', async () => {
+  const res = await request(app).post('/api/usuarios').send({});
+  expect(res.status).toBe(400);
+});`},
+
+{id:12,cat:"testing",file:"calcularTotal.test.js",q:"¿Qué son las pruebas de mantenibilidad?",options:["Pruebas que evalúan la capacidad de la aplicación para adaptarse a los cambios y actualizaciones del código o el sistema.","Pruebas que se ocupan del rendimiento de la aplicación.","Pruebas que se ocupan de la usabilidad del sistema desde la perspectiva del usuario.","Pruebas que se centran en la seguridad de la aplicación."],correct:0,why:"Miden qué tan fácil es modificar, corregir o ampliar el sistema cuando cambian los requisitos. No miran la velocidad (rendimiento) ni la seguridad, sino lo fácil que será mantener el código a futuro.",code:`// Código mantenible: lógica pura y separada, fácil de cambiar
+export const calcularTotal = (items) =>
+  items.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
+
+// Un test la "blinda": si mañana cambia la fórmula, el test avisa
+test('suma precio x cantidad', () => {
+  expect(calcularTotal([{ precio: 10, cantidad: 2 }])).toBe(20);
+});`},
+
+{id:17,cat:"testing",file:"niveles.test.js",q:"¿Qué combinación de niveles de prueba es adecuada para React + Express + Sequelize?",options:["Unitarias, de componentes, de integración de API y end-to-end para flujos completos.","Solo pruebas manuales de interfaz, sin pruebas automatizadas.","Solo pruebas de estrés, porque cubren todos los requisitos funcionales.","Solo pruebas de base de datos, sin validar endpoints ni componentes."],correct:0,why:"Cada nivel cubre algo distinto: las unitarias prueban funciones sueltas, las de componentes prueban la UI de React, las de integración prueban los endpoints, y las end-to-end (E2E) simulan al usuario recorriendo todo el flujo. Combinarlas da cobertura real.",code:`// La "pirámide de pruebas": muchas baratas abajo, pocas caras arriba
+// 1) Unitaria (Jest)              -> una función
+test('suma', () => expect(suma(2, 3)).toBe(5));
+// 2) Componente (Testing Library) -> render de un componente React
+// 3) Integración (Supertest)      -> un endpoint real de Express
+// 4) E2E (Cypress / Playwright)   -> el usuario hace login y compra`},
+
+{id:18,cat:"testing",file:"basico.test.js",q:"En Jest, ¿qué recibe normalmente la función test()?",options:["Una descripción de la prueba y una función callback con las verificaciones a ejecutar.","El puerto del servidor y el nombre de la base de datos.","Únicamente el resultado esperado de la prueba.","Un token JWT y un refresh token."],correct:0,why:"test() recibe dos cosas: un texto que describe qué se prueba (aparece en el reporte) y una función con las verificaciones (los `expect`). Así Jest sabe qué ejecutar y con qué nombre mostrarlo.",code:`// test(descripción, callbackConLasVerificaciones)
+test('2 + 2 es igual a 4', () => {
+  expect(2 + 2).toBe(4);
+});`},
+
+{id:19,cat:"testing",file:"regresion.test.js",q:"¿Cuál es el objetivo de una prueba de regresión?",options:["Verificar que escenarios que funcionaban correctamente sigan funcionando después de cambios.","Medir cuántos usuarios simultáneos soporta una aplicación antes de romperse.","Probar únicamente la apariencia visual de una pantalla.","Reemplazar todas las pruebas unitarias por pruebas manuales."],correct:0,why:"Una prueba de regresión revisa que lo que YA funcionaba siga funcionando después de un cambio (un fix, una feature nueva, un refactor). Atrapa errores que 'reaparecen' o que rompimos sin querer.",code:`// Tras tocar el carrito, esta prueba confirma que el descuento
+// que ya andaba NO se rompió. Eso es una regresión.
+test('el cupón de 10% sigue aplicándose', () => {
+  expect(aplicarCupon(100, 'DESC10')).toBe(90);
+});`},
+
+{id:42,cat:"testing",file:"jsonplaceholder.js",q:"Al practicar con JSONPlaceholder, ¿qué es importante saber sobre POST, PUT o DELETE?",options:["La API rechaza todos los métodos que no sean GET.","La API simula respuestas correctas, aunque los cambios no quedan persistidos realmente.","La API solo funciona si se usa React Hook Form.","La API modifica archivos locales del proyecto React."],correct:1,why:"JSONPlaceholder es una API falsa para practicar: te responde como si hubiera guardado o borrado (status 200/201 y el objeto), pero en realidad no cambia nada en su servidor. Ideal para probar tu código sin tocar datos reales.",code:`// POST a JSONPlaceholder: responde 201 y el objeto "creado"...
+const { data } = await axios.post(
+  'https://jsonplaceholder.typicode.com/posts',
+  { title: 'Hola', body: 'Mundo', userId: 1 }
+);
+console.log(data.id); // 101  (pero NO se guardó de verdad)`},
+
+{id:13,cat:"auth",file:"cliente.js",q:"¿Cómo suele enviarse un access token JWT a una API protegida?",options:["En el header Authorization con el esquema Bearer.","Como contraseña en texto plano dentro de cada respuesta.","Como nombre del archivo de test de Jest.","Como parámetro obligatorio de todas las rutas públicas."],correct:0,why:"El estándar es mandarlo en la cabecera HTTP `Authorization`, con el prefijo `Bearer` seguido del token. El backend lee esa cabecera, valida el token y recién ahí responde.",code:`// El cliente manda el token en la cabecera Authorization
+const { data } = await axios.get('/api/perfil', {
+  headers: { Authorization: 'Bearer ' + token }
+});`},
+
+{id:14,cat:"auth",file:"oauth-flow.js",q:"¿Qué estándar abierto de token de seguridad se usa para autenticación y autorización en apps web y móviles?",options:["Autorización API.","OAuth 2.0.","Autorización HTTP.","Autorización JWT."],correct:1,why:"OAuth 2.0 es el estándar abierto más usado para autenticación y autorización en apps web y móviles. Permite que un proveedor de identidad (Google, Keycloak, etc.) emita los tokens, sin que tu app tenga que manejar las contraseñas.",code:`// Flujo OAuth 2.0 (simplificado):
+// 1) La app redirige al proveedor de identidad
+window.location = 'https://auth.misitio.com/login?client_id=app&response_type=code';
+// 2) El usuario inicia sesión allí y vuelve con un "code"
+// 3) La app canjea el code por un access token
+// 4) Usa ese token (Bearer) para llamar a la API protegida`},
+
+{id:15,cat:"auth",file:"cuentas.controller.js",q:"¿Por qué no alcanza con autenticar al usuario en un endpoint como /api/cuentas/:id?",options:["Porque también debe verificarse que el recurso solicitado pertenezca al usuario o que tenga permiso para verlo.","Porque todos los endpoints con parámetros deben ser públicos.","Porque JWT impide consultar bases de datos.","Porque Supertest solo puede probar endpoints sin autenticación."],correct:0,why:"Saber QUIÉN sos (autenticación) no es lo mismo que saber QUÉ podés ver (autorización). Aunque el token sea válido, hay que comprobar que la cuenta :id sea tuya; si no, cualquiera logueado podría leer cuentas ajenas con solo cambiar el número.",code:`// Autenticado no es lo mismo que autorizado: validar que sea SUYO
+app.get('/api/cuentas/:id', auth, async (req, res) => {
+  const cuenta = await Cuenta.findByPk(req.params.id);
+  if (!cuenta) return res.status(404).end();
+  if (cuenta.usuarioId !== req.user.id) return res.status(403).end(); // ajena
+  res.json(cuenta);
+});`},
+
+{id:16,cat:"auth",file:"login.controller.js",q:"¿Qué es la autenticación?",options:["El proceso de conceder permisos a los usuarios autenticados.","El proceso de identificar a los usuarios y validar su identidad.","Un método de seguridad para evitar la entrada de intrusos.","Un sistema que almacena las credenciales de los usuarios."],correct:1,why:"Autenticar es responder '¿quién sos y podés probarlo?'. Se valida la identidad con credenciales (usuario y contraseña, token, huella). Es distinto de autorizar, que decide qué puede hacer una vez identificado.",code:`// Autenticación: validar la identidad con credenciales
+app.post('/login', async (req, res) => {
+  const user = await User.findOne({ where: { email: req.body.email } });
+  const ok = user && await bcrypt.compare(req.body.password, user.hash);
+  if (!ok) return res.status(401).json({ error: 'Credenciales inválidas' });
+  res.json({ token: emitirJWT(user) }); // identidad confirmada -> token
+});`},
+
+{id:20,cat:"auth",file:"jwt.js",q:"¿Qué es un JWT?",options:["Un objeto CSV codificado que contiene información sobre el usuario.","Un objeto JSON codificado que contiene información sobre el usuario.","Un objeto TXT codificado que contiene información sobre el usuario.","Un objeto XML codificado que contiene información sobre el usuario."],correct:1,why:"JWT significa JSON Web Token. Es un objeto JSON (con datos del usuario, llamados 'claims') codificado en Base64 y firmado. La 'J' es de JSON: por eso no es CSV, TXT ni XML.",code:`// Un JWT lleva un JSON con "claims" sobre el usuario
+const payload = { sub: 123, nombre: 'Ana', rol: 'admin' };
+const token = jwt.sign(payload, CLAVE_SECRETA, { expiresIn: '1h' });
+
+// El token viaja codificado; al verificarlo recuperás ese JSON
+const datos = jwt.verify(token, CLAVE_SECRETA); // { sub: 123, ... }`},
+
+{id:51,cat:"auth",file:"auth.middleware.js",q:"¿Cuál situación corresponde mejor a una respuesta 401 Unauthorized?",options:["La base de datos no tiene suficiente espacio en disco.","La API no puede autenticar la sesión porque el token falta, es inválido, venció o está mal enviado.","El usuario está autenticado, pero no tiene el rol necesario para borrar un recurso.","La validación de un campo obligatorio falló por estar vacío."],correct:1,why:"401 significa 'no sé quién sos': falta el token, está vencido, mal formado o mal enviado. Ojo: si el usuario SÍ está identificado pero no tiene permiso, eso es 403 Forbidden, no 401.",code:`// 401: problema de AUTENTICACIÓN (identidad), no de permisos
+function auth(req, res, next) {
+  const h = req.headers.authorization;            // "Bearer xxx"
+  if (!h) return res.status(401).json({ error: 'Falta el token' });
+  try {
+    req.user = jwt.verify(h.replace('Bearer ', ''), CLAVE);
+    next();
+  } catch {
+    res.status(401).json({ error: 'Token inválido o vencido' });
+  }
+}`},
+
+{id:52,cat:"auth",file:"api.js",q:"¿Qué ventaja aporta centralizar el bearer token en un interceptor o servicio Axios?",options:["Convierte todas las respuestas 403 en respuestas 200.","Impide que el usuario cierre sesión.","Evita repetir la configuración en cada componente y ayuda a enviar el token vigente de manera consistente.","Elimina la necesidad de validar el token en el backend."],correct:2,why:"Si cada componente arma su propia cabecera, repetís código y es fácil olvidarte o mandar un token viejo. Un interceptor lo agrega UNA sola vez, automáticamente, a todas las peticiones.",code:`// Un interceptor agrega el token a TODAS las peticiones, una sola vez
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = 'Bearer ' + token;
+  return config;
+});`},
+
+{id:53,cat:"auth",file:"seguridad.js",q:"¿Por qué el backend debe validar el token aunque el frontend ya proteja la ruta visual?",options:["Porque Keycloak no puede emitir tokens para frontends.","Porque CORS reemplaza por completo la autorización.","Porque el endpoint puede ser invocado fuera del frontend, y la seguridad real del recurso debe aplicarse en la API.","Porque React Router solo funciona con usuarios administradores."],correct:2,why:"Ocultar un botón o una pantalla en React es solo cosmético: cualquiera puede llamar al endpoint directo con Postman o curl. La seguridad de verdad vive en el backend, que valida el token en cada petición.",code:`// El frontend oculta el botón... pero esto se puede llamar igual:
+//   curl -X DELETE https://api.misitio.com/usuarios/5
+// Por eso el backend SIEMPRE valida en el servidor:
+app.delete('/usuarios/:id', auth, requireRol('admin'), borrarUsuario);`},
+
+{id:54,cat:"auth",file:"roles.js",q:"En una app con login y roles, ¿cuál es la diferencia más precisa entre autenticación y autorización?",options:["Son equivalentes si la aplicación usa JWT.","Autorización solo ocurre en el frontend y autenticación solo en la base de datos.","Autenticación define los roles; autorización valida la contraseña.","Autenticación verifica la identidad del usuario; autorización decide qué acciones o recursos puede usar."],correct:3,why:"Autenticación responde '¿quién sos?' (probar identidad). Autorización responde '¿qué tenés permitido?' (qué recursos o acciones). Primero te identificás, después el sistema decide qué podés hacer.",code:`// 1) Autenticación: ¿quién sos?  (valida el token)
+app.use(auth);
+
+// 2) Autorización: ¿podés hacer ESTO?  (valida el rol o permiso)
+app.delete('/productos/:id', requireRol('admin'), borrar);`},
+
+{id:55,cat:"auth",file:"keycloak.js",q:"¿Qué responsabilidad cumple Keycloak en una arquitectura con React, Express y recursos protegidos?",options:["Valida formularios HTML sin necesidad de frontend ni backend.","Actúa como proveedor de identidad, centralizando usuarios, clientes, roles y emisión de tokens.","Reemplaza al backend Express y ejecuta todos los controladores de negocio.","Convierte automáticamente cualquier ruta pública en una ruta de React."],correct:1,why:"Keycloak es un proveedor de identidad (IdP): un servidor aparte que maneja usuarios, roles y clientes, y emite los tokens. Así React y Express no reinventan el login: lo delegan en Keycloak.",code:`// React redirige a Keycloak para el login; Keycloak emite el token.
+// Express solo VERIFICA ese token con las claves públicas de Keycloak.
+const token = keycloak.token;                 // emitido por Keycloak
+await axios.get('/api/privado', {
+  headers: { Authorization: 'Bearer ' + token }
+});`},
+
+{id:56,cat:"auth",file:"estructura-jwt.js",q:"¿Cuál es la estructura general de un JWT?",options:["Tres partes separadas por punto: header, payload y signature.","Dos partes separadas por barra: usuario y contraseña.","Una clave pública y una base de datos embebida en el navegador.","Un archivo JSON completo enviado como cookie sin firma."],correct:0,why:"Un JWT tiene 3 partes unidas por puntos: header.payload.signature. El header dice el algoritmo, el payload lleva los datos (claims) y la firma garantiza que nadie lo alteró.",code:`// JWT = header . payload . signature   (3 partes separadas por ".")
+// Ejemplo:  eyJhbGci...  .  eyJzdWIi...  .  SflKxwRJ...
+//             header            payload          firma
+const [header, payload, firma] = token.split('.');`},
+
+{id:57,cat:"auth",file:"ruta-admin.jsx",lang:"jsx",q:"Una ruta de React solo debe verse por usuarios admin. ¿Qué afirmación es la más correcta?",options:["Un usuario sin rol admin debería recibir permisos si conoce la URL exacta.","Si React oculta el botón, el backend puede dejar el endpoint público.","El frontend puede redirigir u ocultar la pantalla, pero el backend también debe validar el rol en cada endpoint protegido.","La autorización queda resuelta solo con useNavigate."],correct:2,why:"El frontend mejora la experiencia (oculta o redirige lo que no corresponde), pero no es seguridad real. El backend debe revalidar el rol en cada endpoint, porque la API se puede llamar sin pasar por React.",code:`// Frontend: mejora la experiencia, pero NO es seguridad
+<Route path="/admin"
+  element={user.rol === 'admin' ? <Admin/> : <Navigate to="/"/>} />
+
+// Backend: la seguridad REAL, validada en cada endpoint
+app.get('/api/admin/stats', auth, requireRol('admin'), getStats);`},
+
+{id:58,cat:"auth",file:"verificar.js",q:"¿Qué uso seguro puede hacer el backend de la información publicada por el proveedor de identidad?",options:["Omitir la validación de expiración si el token proviene de un frontend conocido.","Validar que el issuer sea el esperado y usar las claves públicas publicadas para verificar la firma del token.","Permitir cualquier audience porque todas las APIs usan el mismo usuario.","Copiar el access token en logs para poder reutilizarlo ante errores."],correct:1,why:"El proveedor (ej. Keycloak) publica sus claves públicas y un 'issuer' (quién emitió el token). El backend usa esas claves para verificar la firma y comprueba que el issuer sea el esperado; así confía en el token sin compartir secretos.",code:`// El backend verifica firma + issuer con las claves PÚBLICAS del IdP
+const datos = jwt.verify(token, clavePublicaDeKeycloak, {
+  issuer: 'https://auth.misitio.com/realms/mi-app',
+  audience: 'mi-api'
+});
+// si la firma no coincide o el issuer no es el esperado -> rechaza`},
+
+{id:59,cat:"auth",file:"payload.js",q:"¿Por qué no conviene guardar contraseñas, PIN o secretos en el payload de un JWT?",options:["Porque el payload nunca llega al backend.","Porque los tokens siempre se guardan cifrados por React.","Porque el payload puede decodificarse y leerse sin tener la clave de firma.","Porque un JWT no puede transportar claims."],correct:2,why:"El payload de un JWT NO está cifrado, solo codificado en Base64. Cualquiera que tenga el token puede decodificarlo y leer su contenido. La firma evita que lo MODIFIQUEN, pero no impide LEERLO.",code:`// El payload NO está cifrado: se lee sin ninguna clave
+const token = 'eyJhbG....firma';
+const payload = JSON.parse(atob(token.split('.')[1]));
+console.log(payload); // { sub: 123, rol: 'admin' }  <- visible para todos
+// => nunca pongas contraseñas, PIN ni secretos acá`},
+
+{id:60,cat:"auth",file:"pedidos.service.js",q:"¿Cuál es el uso esperado de un access token en una llamada del frontend a una API protegida?",options:["Enviar siempre el ID token al backend para autorizar operaciones de escritura.","Usarlo como reemplazo de todas las validaciones de backend.","Mostrarlo completo en pantalla para que el usuario lo copie.","Enviarlo al backend como bearer token para solicitar acceso a recursos protegidos."],correct:3,why:"El access token se manda al backend como 'Bearer token' en la cabecera Authorization, para pedir acceso a recursos protegidos. No se muestra en pantalla ni reemplaza las validaciones del backend.",code:`// Uso correcto: como Bearer hacia la API protegida
+async function getMisPedidos(token) {
+  const { data } = await axios.get('/api/pedidos', {
+    headers: { Authorization: 'Bearer ' + token }
+  });
+  return data;
+}`},
+
+{id:22,cat:"comp",file:"Perfil.jsx",lang:"jsx",q:"¿Cuál de estos códigos usa correctamente el hook useContext en React?",options:["const value = useRef(MyContext)","const value = useContext(MyContext)","const value = useState(MyContext)","const value = useEffect(MyContext)","const value = useContext()"],correct:1,why:"useContext recibe el objeto de contexto creado con createContext y devuelve su valor actual. Por eso la forma correcta es `useContext(MyContext)`: no useRef/useState/useEffect, y tampoco vacío.",code:`import { useContext } from 'react';
+import { MyContext } from './contexto';
+
+function Perfil() {
+  const value = useContext(MyContext); // lee el valor del Provider más cercano
+  return <p>Hola, {value.nombre}</p>;
+}`},
+
+{id:23,cat:"comp",file:"App.jsx",lang:"jsx",q:"¿Cuál es la forma correcta de pasar una prop de un padre a un hijo en React?",options:["Creando una variable global en el padre y accediendo a ella desde el hijo.","Definiendo una propiedad en el objeto de opciones del hijo.","Usando la sintaxis de atributos HTML en el componente hijo.","Pasando la prop como un argumento en la llamada del componente hijo."],correct:2,why:"En React las props se pasan como si fueran atributos HTML del componente hijo. El hijo las recibe dentro de su objeto `props`.",code:`// Padre: pasa "nombre" como si fuera un atributo
+function App() {
+  return <Saludo nombre="Ana" />;
+}
+
+// Hijo: recibe la prop
+function Saludo(props) {
+  return <h1>Hola, {props.nombre}</h1>;
+}`},
+
+{id:24,cat:"comp",file:"Contador.jsx",lang:"jsx",warn:"Redacción imperfecta: useState es el hook que CREA el estado y devuelve [valor, actualizador]. La opción marcada describe más bien al actualizador (setN). Es la 'menos incorrecta' de la lista.",q:"¿Qué es useState en React?",options:["Una propiedad que define una prop.","Una función que actualiza el estado de un componente.","Una función que define una prop.","Una propiedad que define el estado de un componente."],correct:1,why:"useState es un hook (una función) que le da estado a un componente funcional: devuelve el valor actual y una función para actualizarlo. Cuando el estado cambia, el componente se vuelve a renderizar.",code:`import { useState } from 'react';
+
+function Contador() {
+  const [n, setN] = useState(0); // valor actual + función actualizadora
+  return <button onClick={() => setN(n + 1)}>Clicks: {n}</button>;
+}`},
+
+{id:25,cat:"comp",file:"Form.jsx",lang:"jsx",q:"¿Qué devuelve useState(valorInicial)?",options:["Un par con el valor actual del estado y una función para actualizarlo.","Un componente HTML ya renderizado.","Una prop enviada automáticamente al padre.","Un contexto sin valor por defecto."],correct:0,why:"Devuelve un array de dos elementos: [valorActual, funciónParaActualizar]. Por eso se desestructura con `const [valor, setValor] = useState(...)`.",code:`const [email, setEmail] = useState(''); // [valor, actualizador]
+//      valor actual ^      ^ función que lo cambia y re-renderiza
+
+setEmail('ana@mail.com'); // actualiza el estado y vuelve a renderizar`},
+
+{id:26,cat:"comp",file:"Padre.jsx",lang:"jsx",q:"¿Cómo se pasa una prop desde un padre hacia un hijo en JSX?",options:["Como atributo del componente hijo, por ejemplo <MiComponente dato={valor} />.","Creando una variable global que el hijo lea automáticamente.","Usando this.props dentro de cualquier componente funcional.","Modificando directamente el DOM con appendChild."],correct:0,why:"Se escribe como un atributo del componente: `<MiComponente dato={valor} />`. Con las llaves {} podés pasar cualquier valor de JavaScript: variables, números, objetos o funciones.",code:`const valor = 42;
+
+// la prop "dato" viaja como atributo; las llaves {} = expresión JS
+<MiComponente dato={valor} activo={true} items={[1, 2, 3]} />`},
+
+{id:27,cat:"comp",file:"Lista.jsx",lang:"jsx",q:"¿Cuál opción es necesaria para que el renderizado de listas funcione correctamente en React?",options:["Usar un atributo id en cada elemento de la lista.","Usar una lista con valores únicos.","Usar un atributo key en cada elemento de la lista.","Usar una función render() para cada elemento.","Usar un método forEach() para iterar los elementos."],correct:2,why:"React necesita una prop `key` única en cada elemento de una lista para identificarlos y actualizar solo lo que cambió. Sin key, React muestra un warning y puede renderizar mal al reordenar.",code:`// cada elemento necesita una "key" única (normalmente el id)
+{usuarios.map((u) => (
+  <li key={u.id}>{u.nombre}</li>
+))}`},
+
+{id:28,cat:"comp",file:"Usuario.jsx",lang:"jsx",q:"¿Qué permite la desestructuración de props en un componente funcional?",options:["Extraer propiedades del objeto props en variables más directas, por ejemplo function Usuario({ nombre }).","Convertir props en variables globales mutables.","Evitar que el componente se renderice.","Crear automáticamente un Provider de contexto."],correct:0,why:"Permite sacar directamente las props que te interesan como variables, sin escribir `props.` cada vez. El código queda más corto y legible.",code:`// En vez de recibir "props" y usar props.nombre, props.edad...
+function Usuario({ nombre, edad }) {
+  return <p>{nombre}, {edad} años</p>;
+}
+// equivale a:  function Usuario(props) { ... props.nombre ... }`},
+
+{id:36,cat:"comp",file:"Padre.jsx",lang:"jsx",q:"¿Cuál describe mejor la comunicación entre padre e hijo usando props?",options:["El hijo puede modificar directamente los datos del padre usando props.","El hijo accede a los datos del padre usando el hook useContext.","El componente padre pasa datos directamente al componente hijo a través de props.","El padre utiliza el hook useProps para compartir datos con el hijo."],correct:2,why:"El flujo de datos en React es de arriba hacia abajo: el padre pasa datos al hijo por props. El hijo los recibe pero no los modifica: las props son de solo lectura.",code:`// flujo de datos: el PADRE manda, el hijo recibe (solo lectura)
+function Padre() {
+  const usuario = { nombre: 'Ana', rol: 'admin' };
+  return <Tarjeta usuario={usuario} />; // pasa el dato hacia abajo
+}
+function Tarjeta({ usuario }) {
+  return <h2>{usuario.nombre}</h2>; // lo usa, no lo cambia
+}`},
+
+{id:37,cat:"comp",file:"Boton.jsx",lang:"jsx",q:"¿Cuál es el patrón habitual para que un hijo avise al padre que ocurrió una acción?",options:["El padre pasa una función por props y el hijo la ejecuta cuando corresponde.","El hijo debe crear una nueva instancia de BrowserRouter.","El padre debe leer el DOM del hijo con document.querySelector.","El hijo cambia directamente las variables locales del padre."],correct:0,why:"Como los datos bajan del padre al hijo, para comunicar 'hacia arriba' el padre le pasa al hijo una función (callback). El hijo la llama cuando ocurre algo, y así el padre se entera y reacciona.",code:`// El padre pasa una función; el hijo la ejecuta para "avisar"
+function Padre() {
+  const manejar = (texto) => console.log('el hijo dijo:', texto);
+  return <Boton onAccion={manejar} />;
+}
+function Boton({ onAccion }) {
+  return <button onClick={() => onAccion('¡hola!')}>Enviar</button>;
+}`},
+
+{id:40,cat:"comp",file:"Saludo.jsx",lang:"jsx",q:"¿Cuál describe mejor un componente funcional en React?",options:["Un componente que utiliza una función en lugar de una clase para su definición.","Un componente que no requiere el uso de funciones.","Un componente que solo se utiliza para el diseño y no para la lógica.","Un componente que no tiene estado interno ni ciclo de vida."],correct:0,why:"Un componente funcional se define con una función (no con `class`). Recibe props, puede tener estado con hooks (useState, useEffect...) y devuelve el JSX a mostrar. Es la forma moderna y recomendada.",code:`// Componente funcional: una función que devuelve JSX
+function Saludo({ nombre }) {
+  return <h1>Hola, {nombre}</h1>;
+}
+// (reemplaza a las antiguas clases que extendían React.Component)`},
+
+{id:21,cat:"hooks",file:"Saludo.jsx",lang:"jsx",q:"¿Cuál es una forma común de renderizado condicional en React con el operador ternario?",options:["Usando múltiples operadores ternarios anidados para casos complejos.","Evaluando una expresión lógica dentro del operador ternario para decidir qué componente o JSX renderizar.","Usando el ternario para controlar la visibilidad de un único componente.","Usando el ternario para definir estilos CSS según una condición."],correct:1,why:"El ternario `condición ? A : B` se usa para elegir qué renderizar según una condición: si se cumple muestra A, si no, muestra B. Es la forma típica de renderizado condicional en JSX.",code:`// condición ? siVerdadero : siFalso
+function Saludo({ logueado }) {
+  return (
+    <div>
+      {logueado ? <p>Bienvenido</p> : <p>Iniciá sesión</p>}
+    </div>
+  );
+}`},
+
+{id:29,cat:"hooks",file:"Perfil.jsx",lang:"jsx",q:"¿Qué hook de React se usa para ejecutar código cuando un componente se inicializa o se actualiza?",options:["useContext","useRef","useMemo","useEffect","useState"],correct:3,why:"useEffect ejecuta 'efectos secundarios' (pedir datos, suscripciones, timers) después de renderizar. Corre al montarse el componente y, según su lista de dependencias, también cuando esas dependencias cambian.",code:`import { useEffect, useState } from 'react';
+
+function Perfil({ id }) {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    fetch('/api/users/' + id).then(r => r.json()).then(setUser);
+  }, [id]); // corre al montar y cada vez que cambie "id"
+  return <p>{user?.nombre}</p>;
+}`},
+
+{id:30,cat:"hooks",file:"main.jsx",lang:"jsx",q:"En un proyecto React creado con Vite, ¿qué archivo suele crear el root y renderizar el componente principal?",options:["src/main.jsx","package.json","vite.config.js","index.css"],correct:0,why:"En Vite, src/main.jsx es el punto de entrada: ahí se crea la raíz de React con createRoot y se renderiza <App />. (vite.config.js configura Vite, index.css son estilos y package.json lista dependencias.)",code:`// src/main.jsx — punto de entrada de la app
+import { createRoot } from 'react-dom/client';
+import App from './App.jsx';
+
+createRoot(document.getElementById('root')).render(<App />);`},
+
+{id:31,cat:"hooks",file:"contexto.jsx",lang:"jsx",q:"¿Cuál afirmación sobre Context es más precisa?",options:["Puede evitar prop drilling en datos compartidos, pero no reemplaza automáticamente toda estrategia de estado.","Sirve exclusivamente para navegar entre páginas.","Solo funciona con componentes de clase y rutas anidadas.","Debe usarse para cualquier valor local, incluso si solo lo usa un input."],correct:0,why:"Context sirve para compartir datos 'globales' (usuario, tema, idioma) sin pasarlos mano a mano por cada nivel: eso evita el prop drilling. Pero no es un gestor de estado completo; para lógica compleja se sigue usando useState/useReducer o librerías.",code:`// Context evita pasar "usuario" por cada nivel intermedio
+const UserContext = createContext(null);
+
+<UserContext.Provider value={usuario}>
+  <App />            {/* cualquier hijo lo lee con useContext */}
+</UserContext.Provider>`},
+
+{id:32,cat:"hooks",file:"Nav.jsx",lang:"jsx",q:"¿Qué problema aparece cuando se pasan props por muchos componentes intermedios que no las usan?",options:["Validación nativa, porque el navegador controla los inputs.","Renderizado condicional, porque desaparece el componente padre.","Prop drilling, porque los datos atraviesan niveles innecesarios de la jerarquía.","Routing dinámico, porque la URL cambia en cada componente."],correct:2,why:"Se llama prop drilling: una prop debe pasar por varios componentes que no la usan, solo para llegar a uno profundo. Hace el código tedioso y frágil. Se soluciona con Context.",code:`// "user" pasa por niveles que NO lo usan: App -> Layout -> Nav -> Avatar
+function Nav({ user }) {          // Nav no usa "user"...
+  return <Avatar user={user} />; // ...solo lo reenvía hacia abajo
+}
+// Solución: Context, para no encadenar la prop por todos lados.`},
+
+{id:33,cat:"hooks",file:"App.jsx",lang:"jsx",q:"¿Para qué se suele definir una ruta con path=\"*\" en React Router?",options:["Para forzar que el navegador haga una petición HTTP tradicional.","Para mostrar una vista de error o página no encontrada cuando ninguna otra ruta coincide.","Para convertir una ruta en un formulario controlado.","Para indicar que todas las rutas deben tener parámetros obligatorios."],correct:1,why:"`path=\"*\"` es la ruta 'comodín': coincide con cualquier URL que no haya matcheado antes. Se usa para mostrar una página 404 (no encontrada).",code:`<Routes>
+  <Route path="/" element={<Inicio />} />
+  <Route path="/productos" element={<Productos />} />
+  <Route path="*" element={<NoEncontrada />} /> {/* 404: cualquier otra URL */}
+</Routes>`},
+
+{id:34,cat:"hooks",file:"Boton.jsx",lang:"jsx",q:"¿Cómo se asigna una clase CSS a un elemento en React?",options:["className","class","cssClass","classStyle","styleClass"],correct:0,why:"En React se usa `className` (no `class`), porque `class` es una palabra reservada de JavaScript. React la traduce al atributo class real del HTML.",code:`// en React es className (no "class", que es palabra reservada de JS)
+<button className="btn btn-primario">Guardar</button>`},
+
+{id:35,cat:"hooks",file:"Privada.jsx",lang:"jsx",q:"¿Cuál de las siguientes opciones se utiliza para redirigir a una nueva ruta en React Router?",options:["<Navigate to=\"/new\" />","<Link to=\"/new\" />","<Redirect to=\"/new\" />","<Route redirect=\"/new\" />"],correct:0,why:"En React Router v6 se redirige con el componente `<Navigate to=\"/ruta\" />`. `<Link>` es para enlaces que el usuario clickea, y `<Redirect>` era de la v5 (ya no existe en v6).",code:`// Redirige si el usuario no está logueado (React Router v6)
+function Privada({ user, children }) {
+  if (!user) return <Navigate to="/login" />;
+  return children;
+}`},
+
+{id:38,cat:"hooks",file:"App.jsx",lang:"jsx",q:"¿Cuál describe mejor el propósito de React Router en una app de React?",options:["Manejar el estado global de la aplicación.","Proporcionar una estructura de navegación y enrutamiento para la aplicación.","Controlar el flujo de datos en la aplicación.","Gestionar la comunicación entre componentes."],correct:1,why:"React Router maneja la navegación: asocia cada URL con un componente y permite moverse entre 'páginas' sin recargar (SPA). No maneja el estado global ni la comunicación entre componentes.",code:`// React Router conecta cada URL con un componente
+<BrowserRouter>
+  <Routes>
+    <Route path="/" element={<Inicio />} />
+    <Route path="/perfil" element={<Perfil />} />
+  </Routes>
+</BrowserRouter>`},
+
+{id:39,cat:"hooks",file:"Caja.jsx",lang:"jsx",q:"¿Cuál es la forma correcta de usar estilos en línea en un componente de React?",options:["<div styleClass=\"myStyle\">Contenido</div>","<div classStyle=\"myStyle\">Contenido</div>","<div className=\"myStyle\">Contenido</div>","<div style=\"myStyle\">Contenido</div>","<div style={myStyle}>Contenido</div>"],correct:4,why:"Los estilos en línea se pasan con la prop `style` recibiendo un OBJETO de JavaScript, no un string. Por eso van con llaves: `style={miObjeto}` o `style={{ color: 'white' }}`.",code:`// style recibe un OBJETO JS (propiedades en camelCase), no un string
+const miEstilo = { color: 'white', backgroundColor: 'tomato', padding: 8 };
+
+<div style={miEstilo}>Contenido</div>
+// o directo: <div style={{ color: 'white' }}>Contenido</div>`},
+
+{id:41,cat:"forms",file:"Form.jsx",lang:"jsx",warn:"Ambigua: en react-hook-form `required` y `pattern` también son reglas de validación válidas (se pasan a register). Si el corrector marca otra, la más probable es `required`.",q:"¿Cuál de los siguientes métodos se utiliza para definir una regla de validación en react-hook-form?",options:["validate()","exception()","rules()","required()","pattern()"],correct:0,why:"Al registrar un campo con register() le pasás reglas. `validate` permite una función propia que devuelve true (válido) o un texto de error. Ojo: required, min, max y pattern también son reglas válidas; por eso la pregunta es discutible.",code:`// regla de validación personalizada con "validate"
+<input {...register('edad', {
+  required: 'Campo obligatorio',
+  validate: (v) => v >= 18 || 'Debés ser mayor de edad'
+})} />`},
+
+{id:43,cat:"forms",file:"Form.jsx",lang:"jsx",q:"¿Cuál de las siguientes opciones describe mejor las expresiones regulares?",options:["Secuencias de caracteres utilizadas para definir reglas de validación en react-hook-form.","Patrones de diseño utilizados para estructurar componentes de React.","Funciones de JavaScript utilizadas para dibujar gráficos estadísticos.","Funciones de JavaScript utilizadas para realizar operaciones matemáticas.","Sintaxis especial utilizada para escribir comentarios en el código."],correct:0,why:"Una expresión regular (regex) es un patrón que describe qué forma debe tener un texto. En react-hook-form se usan en la regla `pattern` para validar formatos (email, solo números, etc.).",code:`// regex en la regla "pattern": el texto debe respetar un formato
+<input {...register('usuario', {
+  pattern: {
+    value: /^[A-Za-z0-9]+$/,        // solo letras y números, sin espacios
+    message: 'Solo letras y números'
+  }
+})} />`},
+
+{id:44,cat:"forms",file:"posts.js",q:"En Axios, ¿qué representa la opción { params: { userId: 1 } } en una solicitud get?",options:["El cuerpo JSON obligatorio de toda solicitud GET.","Las reglas de validación de React Hook Form.","El estado interno del componente React.","Parámetros de consulta que se agregan a la URL de la solicitud."],correct:3,why:"La opción `params` arma la 'query string' de la URL: Axios convierte { userId: 1 } en ?userId=1 y lo pega al final de la URL automáticamente.",code:`// params  ->  se agregan a la URL como query string
+axios.get('/api/posts', { params: { userId: 1 } });
+// la URL real que sale:  /api/posts?userId=1`},
+
+{id:45,cat:"forms",file:"crear-usuario.js",q:"¿Qué método de Axios se utiliza para enviar datos en una solicitud POST a una API REST?",options:["axios.request(\"POST\", url)","axios.get(url)","axios.post(url)","axios.send(\"POST\", url)","axios.put(url)"],correct:2,why:"Para crear o enviar datos se usa `axios.post(url, datos)`. El segundo argumento es el cuerpo (body) que viaja al servidor.",code:`// POST: crear un recurso enviando datos en el body
+const { data } = await axios.post('/api/usuarios', {
+  nombre: 'Ana',
+  email: 'ana@mail.com'
+});
+console.log(data.id); // id del usuario creado`},
+
+{id:46,cat:"forms",file:"services/usuarios.js",q:"¿Cuál es el objetivo principal de extraer las llamadas HTTP a un archivo de servicio en React?",options:["Evitar que el componente pueda tener estado local.","Centralizar y reutilizar la lógica de acceso a la API, separándola de la vista.","Convertir automáticamente todos los inputs en no controlados.","Reemplazar los métodos HTTP por rutas de React Router."],correct:1,why:"Poner las llamadas HTTP en un archivo de 'servicio' separa la lógica de datos de los componentes (la vista). Así se reutiliza, se cambia en un solo lugar y los componentes quedan más limpios.",code:`// services/usuarios.js — lógica de API centralizada y reutilizable
+export const getUsuarios = () => axios.get('/api/usuarios');
+export const crearUsuario = (u) => axios.post('/api/usuarios', u);
+
+// en el componente queda limpio, sin detalles de HTTP:
+const { data } = await getUsuarios();`},
+
+{id:47,cat:"forms",file:"datos.js",q:"¿Cuál es la forma correcta de consumir una API REST con Axios para obtener datos?",options:["fetch(\"https://miapi.com/datos\")","axios.put(\"https://miapi.com/datos\")","axios.get(\"https://miapi.com/datos\")","axios.post(\"https://miapi.com/datos\")","axios.request(\"https://miapi.com/datos\")"],correct:2,why:"Para LEER datos se usa el método GET: `axios.get(url)`. (post crea, put actualiza; fetch también sirve, pero la pregunta pide específicamente Axios.)",code:`// GET para obtener / leer datos
+const { data } = await axios.get('https://miapi.com/datos');
+console.log(data); // los datos recibidos del servidor`},
+
+{id:48,cat:"forms",file:"services/api.js",q:"En una organización por servicios, ¿qué suele contener un archivo como services/api.js?",options:["La definición de las rutas internas con Route.","Todos los componentes visuales de la aplicación.","Una instancia de Axios configurada, por ejemplo con baseURL.","Las reglas required y pattern de React Hook Form."],correct:2,why:"Suele tener una instancia de Axios ya configurada (URL base, cabeceras, timeout, interceptores). Los demás servicios la importan, así no repiten la configuración en cada llamada.",code:`// services/api.js — una instancia de Axios configurada y reutilizable
+import axios from 'axios';
+
+export const api = axios.create({
+  baseURL: 'https://miapi.com',
+  timeout: 5000
+});
+// uso:  api.get('/usuarios')  ->  https://miapi.com/usuarios`},
+
+{id:49,cat:"forms",file:"api.js",q:"¿Qué ventaja aporta un interceptor de respuesta para el manejo de errores?",options:["Evita declarar reglas de validación en formularios.","Permite que las respuestas HTTP nunca fallen.","Permite centralizar una reacción común ante errores de red o de servidor.","Reemplaza la necesidad de crear servicios para la API."],correct:2,why:"Un interceptor de respuesta corre en CADA respuesta antes de que llegue a tu código. Sirve para manejar errores en un solo lugar (por ejemplo: si llega un 401, desloguear; si hay error de red, avisar).",code:`// Interceptor de respuesta: maneja errores en UN solo lugar
+api.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) cerrarSesion();
+    return Promise.reject(error);
+  }
+);`},
+
+{id:50,cat:"forms",file:"Form.jsx",lang:"jsx",q:"¿Cuál describe mejor el propósito de la propiedad dirty en el formState de react-hook-form?",options:["Indicar si un campo cumple con su validación.","Indicar si un campo es requerido o no.","Indicar si un campo ha sido modificado o no.","Indicar si un campo ha sido visitado o no.","Indicar si un campo ha pasado la validación o no."],correct:2,why:"dirty (isDirty / dirtyFields) indica si el valor de un campo cambió respecto al inicial. Sirve, por ejemplo, para habilitar Guardar solo si el usuario tocó algo. No mide si es válido ni si fue 'visitado' (eso es touched).",code:`// dirtyFields: qué campos cambiaron respecto al valor inicial
+const { register, formState: { isDirty, dirtyFields } } = useForm();
+
+<button disabled={!isDirty}>Guardar</button> // activo solo si algo cambió
+console.log(dirtyFields); // { email: true } si tocaste el campo "email"`}
+];
+
+/* ---------- tiny helpers ---------- */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function fmt(s){return esc(s).replace(/`([^`]+)`/g,'<code>$1</code>');}
+// lightweight, safe-ish syntax highlight for JS/JSX snippets
+function hl(raw){
+  let s=esc(raw);
+  const store=[];const keep=(html)=>{store.push(html);return String.fromCharCode(0xE000+store.length-1);};
+  s=s.replace(/(\/\/[^\n]*)/g,(m)=>keep('<span class="cm">'+m+'</span>'));
+  s=s.replace(/(&#39;|&quot;|'|"|`)(?:\\.|(?!\1).)*\1/g,(m)=>keep('<span class="st">'+m+'</span>'));
+  s=s.replace(/\b(const|let|var|function|return|import|from|export|default|if|else|await|async|new|=&gt;|class|extends|try|catch|throw)\b/g,'<span class="kw">$1</span>');
+  s=s.replace(/\b(\d+)\b/g,'<span class="nu">$1</span>');
+  s=s.replace(/\b([a-zA-Z_$][\w$]*)(?=\()/g,'<span class="fn2">$1</span>');
+  s=s.replace(/(&lt;\/?)([A-Za-z][\w.]*)/g,'$1<span class="tg">$2</span>');
+  s=s.replace(/[-]/g,(m)=>store[m.charCodeAt(0)-0xE000]);
+  return s;
+}
+
+let mode="study", activeCat="all", query="";
+const answered={}; // id -> chosen index
+
+/* ---------- chips ---------- */
+function buildChips(){
+  const counts={}; QUESTIONS.forEach(q=>counts[q.cat]=(counts[q.cat]||0)+1);
+  let html=`<button class="chip" data-cat="all" aria-pressed="true"><span class="cdot" style="background:var(--ink)"></span>Todas <span class="cnt">${QUESTIONS.length}</span></button>`;
+  for(const k in CATS){
+    html+=`<button class="chip" data-cat="${k}" aria-pressed="false" style="--cc:${CATS[k].color}"><span class="cdot"></span>${CATS[k].name} <span class="cnt">${counts[k]||0}</span></button>`;
+  }
+  $("#chips").innerHTML=html;
+  $$(".chip").forEach(c=>c.onclick=()=>{
+    activeCat=c.dataset.cat;
+    $$(".chip").forEach(x=>x.setAttribute("aria-pressed", x===c));
+    render();
+  });
+}
+
+/* ---------- card ---------- */
+function optionRows(q){
+  return q.options.map((o,i)=>{
+    if(mode==="study"){
+      const cls=i===q.correct?"opt correct":"opt";
+      const mk=i===q.correct?"✓":"";
+      return `<li class="${cls}"><span class="mark">${mk}</span><span>${fmt(o)}</span></li>`;
+    } else {
+      const chosen=answered[q.id];
+      let cls="opt",mk="";
+      if(chosen!=null){
+        if(i===q.correct){cls="opt reveal-ok";mk="✓";}
+        else if(i===chosen){cls="opt picked-wrong";mk="✕";}
+      }
+      return `<button class="${cls}" data-i="${i}"><span class="mark">${mk}</span><span>${fmt(o)}</span></button>`;
+    }
+  }).join("");
+}
+function card(q){
+  const c=CATS[q.cat];
+  const locked = mode==="quiz" && answered[q.id]!=null;
+  const warn = q.warn?`<span class="warn">⚠ ambigua</span>`:"";
+  const code = q.code?`<div class="code"><div class="chrome"><span class="d"></span><span class="d"></span><span class="d"></span><span class="fn">${esc(q.file||"ejemplo."+(q.lang||"js"))}</span></div><pre><code>${hl(q.code)}</code></pre></div>`:"";
+  const extra = q.warn?`<p class="extra">${fmt(q.warn)}</p>`:"";
+  return `<article class="card" style="--cc:${c.color}" data-id="${q.id}">
+    <div class="q-head">
+      <div class="q-num">${q.id}</div>
+      <div class="qt">
+        <div class="q-cat"><span>${c.name}</span>${warn}</div>
+        <div class="q-text">${fmt(q.q)}</div>
+      </div>
+    </div>
+    <ul class="opts ${locked?'locked':''}">${optionRows(q)}</ul>
+    <button class="toggle-why" data-toggle="${q.id}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+      <span>¿Por qué es correcta?</span>
+    </button>
+    <div class="why" id="why-${q.id}">
+      <div class="lead">◆ Explicación</div>
+      <p>${fmt(q.why)}</p>
+      ${extra}
+      ${code}
+    </div>
+  </article>`;
+}
+
+/* ---------- render ---------- */
+function visible(){
+  const Q=query.trim().toLowerCase();
+  return QUESTIONS.filter(q=>{
+    if(activeCat!=="all" && q.cat!==activeCat) return false;
+    if(Q){
+      const hay=(q.q+" "+q.options.join(" ")+" "+q.why+" "+CATS[q.cat].name).toLowerCase();
+      if(!hay.includes(Q)) return false;
+    }
+    return true;
+  });
+}
+function render(){
+  const list=visible();
+  $("#count-n").textContent=list.length;
+  $("#stat-shown").textContent=list.length;
+  if(!list.length){
+    $("#list").innerHTML=`<div class="empty"><h3>Sin resultados</h3><p>Probá con otra palabra o quitá el filtro de tema.</p></div>`;
+    return;
+  }
+  $("#list").innerHTML=list.map((q,i)=>card(q)).join("");
+  $$("#list .card").forEach((el,i)=>el.style.animationDelay=Math.min(i*35,420)+"ms");
+  bindCards();
+  updateScore();
+}
+function bindCards(){
+  $$(".toggle-why").forEach(b=>b.onclick=()=>{
+    const w=$("#why-"+b.dataset.toggle);
+    const open=w.classList.toggle("open");
+    b.classList.toggle("open",open);
+    b.querySelector("span").textContent=open?"Ocultar explicación":"¿Por qué es correcta?";
+  });
+  if(mode==="quiz"){
+    $$("#list .opts").forEach(ul=>{
+      ul.querySelectorAll("button.opt").forEach(btn=>btn.onclick=()=>{
+        const card=btn.closest(".card"); const id=+card.dataset.id;
+        if(answered[id]!=null) return;
+        answered[id]=+btn.dataset.i;
+        const q=QUESTIONS.find(x=>x.id===id);
+        ul.classList.add("locked");
+        ul.querySelectorAll("button.opt").forEach((b,i)=>{
+          if(i===q.correct){b.className="opt reveal-ok";b.querySelector(".mark").textContent="✓";}
+          else if(i===answered[id]){b.className="opt picked-wrong";b.querySelector(".mark").textContent="✕";}
+        });
+        // auto-open explanation
+        const w=$("#why-"+id), tb=card.querySelector(".toggle-why");
+        w.classList.add("open");tb.classList.add("open");tb.querySelector("span").textContent="Ocultar explicación";
+        updateScore();
+      });
+    });
+  }
+}
+function updateScore(){
+  const ans=Object.keys(answered).length;
+  let ok=0; for(const id in answered){const q=QUESTIONS.find(x=>x.id===+id); if(q&&answered[id]===q.correct)ok++;}
+  $("#sc-ok").textContent=ok; $("#sc-ans").textContent=ans;
+  $("#sc-fill").style.width=(ans?Math.round(ok/QUESTIONS.length*100):0)+"%";
+}
+
+/* ---------- events ---------- */
+function setMode(m){
+  mode=m; document.body.dataset.mode=m;
+  $("#m-study").setAttribute("aria-pressed",m==="study");
+  $("#m-quiz").setAttribute("aria-pressed",m==="quiz");
+  render();
+}
+$("#m-study").onclick=()=>setMode("study");
+$("#m-quiz").onclick=()=>setMode("quiz");
+$("#sc-reset").onclick=()=>{for(const k in answered)delete answered[k];render();};
+$("#search").addEventListener("input",e=>{query=e.target.value;render();});
+let allOpen=false;
+$("#expand-all").onclick=()=>{
+  allOpen=!allOpen;
+  $$(".why").forEach(w=>w.classList.toggle("open",allOpen));
+  $$(".toggle-why").forEach(b=>{b.classList.toggle("open",allOpen);b.querySelector("span").textContent=allOpen?"Ocultar explicación":"¿Por qué es correcta?";});
+  $("#expand-all").textContent=allOpen?"Colapsar todo":"Expandir todo";
+};
+document.addEventListener("keydown",e=>{
+  if(e.key==="/" && document.activeElement.tagName!=="INPUT"){e.preventDefault();$("#search").focus();}
+  if(e.key==="Escape" && document.activeElement===$("#search")){$("#search").value="";query="";render();$("#search").blur();}
+});
+
+/* ---------- boot ---------- */
+$("#stat-total").textContent=QUESTIONS.length;
+buildChips();
+render();
+</script>
+</body>
+</html>
