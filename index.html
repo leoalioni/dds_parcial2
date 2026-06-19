@@ -98,9 +98,23 @@ header.top{
 .search input:focus + kbd{display:none}
 
 /* ---------- CHIPS ---------- */
-.chips-wrap{border-bottom:1px solid var(--line);background:rgba(245,239,227,.6)}
-.chips{max-width:980px;margin:0 auto;padding:11px 22px;display:flex;gap:9px;overflow-x:auto;align-items:center}
-.chips::-webkit-scrollbar{height:0}
+.chips-wrap{position:relative;border-bottom:1px solid var(--line-strong);background:var(--paper2)}
+.chips{max-width:980px;margin:0 auto;padding:11px 22px 13px;display:flex;gap:9px;overflow-x:auto;align-items:center;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+.chips::-webkit-scrollbar{height:8px}
+.chips::-webkit-scrollbar-track{background:transparent}
+.chips::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:10px;border:0}
+.chips::-webkit-scrollbar-thumb:hover{background:var(--brand)}
+.chips-wrap::before,.chips-wrap::after{content:"";position:absolute;top:0;bottom:0;width:54px;pointer-events:none;z-index:2;opacity:0;transition:opacity .22s}
+.chips-wrap::before{left:0;background:linear-gradient(90deg,var(--paper2) 35%,transparent)}
+.chips-wrap::after{right:0;background:linear-gradient(270deg,var(--paper2) 35%,transparent)}
+.chips-wrap.more-left::before{opacity:1}
+.chips-wrap.more-right::after{opacity:1}
+.chip-nav{position:absolute;top:calc(50% - 1px);transform:translateY(-50%);z-index:3;width:30px;height:30px;border-radius:50%;border:1px solid var(--line-strong);background:var(--card);color:var(--brand-deep);font-size:17px;font-weight:700;line-height:1;display:none;place-items:center;cursor:pointer;box-shadow:var(--shadow);transition:background .16s,color .16s,border-color .16s}
+.chip-nav.left{left:10px}
+.chip-nav.right{right:10px}
+.chip-nav:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+.chips-wrap.more-left .chip-nav.left{display:grid}
+.chips-wrap.more-right .chip-nav.right{display:grid}
 .chip{
   font:inherit;font-weight:600;font-size:13px;white-space:nowrap;cursor:pointer;
   border:1px solid var(--line-strong);background:var(--card);color:var(--ink-soft);
@@ -256,7 +270,11 @@ footer b{color:var(--ink-soft)}
       <kbd>/</kbd>
     </label>
   </div>
-  <div class="chips-wrap"><div class="chips" id="chips"></div></div>
+  <div class="chips-wrap">
+    <button class="chip-nav left" aria-label="Temas anteriores">&lsaquo;</button>
+    <div class="chips" id="chips"></div>
+    <button class="chip-nav right" aria-label="Más temas">&rsaquo;</button>
+  </div>
 </header>
 
 <main>
@@ -336,6 +354,24 @@ function buildChips(){
     $$(".chip").forEach(x=>x.setAttribute("aria-pressed", x===c));
     render();
   });
+}
+
+/* ---------- chip nav (indicador de scroll de temas) ---------- */
+function updateChipNav(){
+  const el=$("#chips"); if(!el) return;
+  const wrap=el.parentElement, max=el.scrollWidth-el.clientWidth;
+  wrap.classList.toggle("more-left", el.scrollLeft>4);
+  wrap.classList.toggle("more-right", el.scrollLeft<max-4);
+}
+function setupChipNav(){
+  const el=$("#chips"); if(!el) return;
+  el.addEventListener("scroll",updateChipNav,{passive:true});
+  window.addEventListener("resize",updateChipNav);
+  window.addEventListener("load",updateChipNav);
+  const L=$(".chip-nav.left"), R=$(".chip-nav.right");
+  if(L) L.onclick=()=>el.scrollBy({left:-240,behavior:"smooth"});
+  if(R) R.onclick=()=>el.scrollBy({left:240,behavior:"smooth"});
+  updateChipNav();
 }
 
 /* ---------- card ---------- */
@@ -471,6 +507,7 @@ document.addEventListener("keydown",e=>{
 /* ---------- boot ---------- */
 $("#stat-total").textContent=QUESTIONS.length;
 buildChips();
+setupChipNav();
 render();
 </script>
 </body>
